@@ -1,28 +1,24 @@
 const axios = require("axios")
-const convertSec = require("../function")
+const convertSec = require("./function")
 const fetch = require("node-fetch")
 
 async function yt(url) {
-  const { data } = await axios(`https://tomp3.cc/api/ajax/search?hl=en`, {
+  const { data } = await axios(`https://www.y2mate.com/mates/en948/analyzeV2/ajax`, {
     method: "post",
-    data: { query: url, vt: "downloader" },
+    data: { k_query: url, k_page: "home", hl: "en", q_auto: 0 },
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      accept: "*/*",
-      "x-requested-with": "XMLHttpRequest"
+      "cookie": "_ga_PSRPB96YVC=GS1.1.1726204937.1.0.1726204937.0.0.0; _ga=GA1.1.1317087614.1726204938",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
     }
   })
   return data
 }
 
-/**
- *
- * @param {String} url
- */
 async function ytmp3(url) {
   try {
     const info = await yt(url)
-    const { data } = await axios(`https://tomp3.cc/api/ajax/convert?hl=en`, {
+    const { data } = await axios(`https://www.y2mate.com/mates/convertV2/index`, {
       method: "post",
       data: {
         vid: info.vid,
@@ -30,7 +26,8 @@ async function ytmp3(url) {
       },
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        accept: "*/*"
+        "cookie": "_ga=GA1.1.1317087614.1726204938; _ga_PSRPB96YVC=GS1.1.1726204937.1.1.1726205011.0.0.0",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
       }
     })
     const thumb = `https://i.ytimg.com/vi/${info.vid}/maxresdefault.jpg`
@@ -45,7 +42,6 @@ async function ytmp3(url) {
       title: data.title,
       channel: info.a,
       duration: convertSec(info.t),
-      durationMs: info.t,
       size: info.links.mp3.mp3128.size,
       type: data.ftype,
       quality: `${data.fquality}Kbps`,
@@ -64,11 +60,6 @@ async function ytmp3(url) {
   }
 }
 
-/**
- *
- * @param {String} url
- * @param {String | Number} quality
- */
 async function ytmp4(url, quality) {
   try {
     const info = await yt(url)
@@ -77,21 +68,21 @@ async function ytmp4(url, quality) {
     } else {
       var qualityHD = 137
     }
-    if (!info.links.mp4["22"]) {
-      var qualityMedium = 136
+    if (!info.links.mp4["134"]) {
+      var qualityH = 18
     } else {
-      var qualityMedium = 22
+      var qualityH = 134
     }
-    if (quality == 1080) {
+    if (quality === 1080) {
       var res = qualityHD
-    } else if (quality == 720) {
-      var res = qualityMedium
-    } else if (quality == 480) {
+    } else if (quality === 720) {
+      var res = 22
+    } else if (quality === 480) {
       var res = 135
-    } else if (quality == 360 || quality == undefined || quality == 0) {
-      var res = 18
+    } else if (quality === 360 || quality === undefined || quality === 0) {
+      var res = qualityH
     }
-    const { data } = await axios(`https://tomp3.cc/api/ajax/convert?hl=en`, {
+    const { data } = await axios(`https://www.y2mate.com/mates/convertV2/index`, {
       method: "post",
       data: {
         vid: info.vid,
@@ -99,7 +90,8 @@ async function ytmp4(url, quality) {
       },
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        accept: "*/*"
+        "cookie": "_ga=GA1.1.1317087614.1726204938; _ga_PSRPB96YVC=GS1.1.1726204937.1.1.1726205272.0.0.0",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
       }
     })
     const thumb = `https://i.ytimg.com/vi/${info.vid}/maxresdefault.jpg`
@@ -114,7 +106,6 @@ async function ytmp4(url, quality) {
       title: data.title,
       channel: info.a,
       duration: convertSec(info.t),
-      durationMs: info.t,
       size: info.links.mp4[`${res}`].size,
       type: data.ftype,
       quality: data.fquality,
