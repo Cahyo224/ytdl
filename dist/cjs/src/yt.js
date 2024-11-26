@@ -1,5 +1,5 @@
 const axios = require("axios")
-const convertSec = require("./function")
+const convertSec = require("../function")
 const fetch = require("node-fetch")
 
 async function yt(url) {
