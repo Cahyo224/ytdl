@@ -85,8 +85,8 @@ async function ytmp4(url, quality) {
     const { data } = await axios(`https://www.y2mate.com/mates/convertV2/index`, {
       method: "post",
       data: {
-        vid: info.vid,
-        k: info.links.mp4[`${res}`].k
+        vid: await info.vid,
+        k: await info.links.mp4[`${res}`].k
       },
       headers: {
         "content-type": "application/x-www-form-urlencoded",
