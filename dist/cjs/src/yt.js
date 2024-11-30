@@ -21,8 +21,8 @@ async function ytmp3(url) {
     const { data } = await axios(`https://www.y2mate.com/mates/convertV2/index`, {
       method: "post",
       data: {
-        vid: info.vid,
-        k: info.links.mp3.mp3128.k
+        vid: await info.vid,
+        k: await info.links.mp3.mp3128.k
       },
       headers: {
         "content-type": "application/x-www-form-urlencoded",
@@ -35,21 +35,21 @@ async function ytmp3(url) {
     if (status !== 200) {
       var thumbImg = `https://i.ytimg.com/vi/${info.vid}/hqdefault.jpg`
     } else {
-      var thumbImg = thumb
+      var thumbImg = await thumb
     }
     const result = {
       status: true,
-      title: data.title,
-      channel: info.a,
-      duration: convertSec(info.t),
-      size: info.links.mp3.mp3128.size,
-      type: data.ftype,
-      quality: `${data.fquality}Kbps`,
-      id: info.vid,
-      thumbnail: thumbImg,
-      url: data.dlink
+      title: await data.title,
+      channel: await info.a,
+      duration: await convertSec(info.t),
+      size: await info.links.mp3.mp3128.size,
+      type: await data.ftype,
+      quality: await `${data.fquality}Kbps`,
+      id: await info.vid,
+      thumbnail: await thumbImg,
+      url: await data.dlink
     }
-    return result
+    return await result
   } catch {
     const result = {
       status: false,
